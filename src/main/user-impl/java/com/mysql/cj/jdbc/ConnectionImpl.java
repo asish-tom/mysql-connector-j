@@ -587,7 +587,7 @@ public class ConnectionImpl implements JdbcConnection, SessionEventListener, Ser
     private void checkTransactionIsolationLevel() {
         String s = this.session.getServerSession().getServerVariable("transaction_isolation");
         if (s == null) {
-            s = this.session.getServerSession().getServerVariable("tx_isolation");
+            s = this.session.getServerSession().getServerVariable("transaction_isolation");
         }
 
         if (s != null) {
@@ -1208,7 +1208,7 @@ public class ConnectionImpl implements JdbcConnection, SessionEventListener, Ser
             if (!this.useLocalSessionState.getValue()) {
                 String s = this.session.queryServerVariable(
                         versionMeetsMinimum(8, 0, 3) || (versionMeetsMinimum(5, 7, 20) && !versionMeetsMinimum(8, 0, 0)) ? "@@session.transaction_isolation"
-                                : "@@session.tx_isolation");
+                                : "@@session.transaction_isolation");
 
                 if (s != null) {
                     Integer intTI = mapTransIsolationNameToValue.get(s);

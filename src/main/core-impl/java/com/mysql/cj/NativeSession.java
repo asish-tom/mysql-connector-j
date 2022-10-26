@@ -436,17 +436,13 @@ public class NativeSession extends CoreSession implements Serializable {
                 queryBuf.append(", @@max_allowed_packet AS max_allowed_packet");
                 queryBuf.append(", @@net_write_timeout AS net_write_timeout");
                 queryBuf.append(", @@performance_schema AS performance_schema");
-                if (!versionMeetsMinimum(8, 0, 3)) {
-                    queryBuf.append(", @@query_cache_size AS query_cache_size");
-                    queryBuf.append(", @@query_cache_type AS query_cache_type");
-                }
                 queryBuf.append(", @@sql_mode AS sql_mode");
                 queryBuf.append(", @@system_time_zone AS system_time_zone");
                 queryBuf.append(", @@time_zone AS time_zone");
                 if (versionMeetsMinimum(8, 0, 3) || (versionMeetsMinimum(5, 7, 20) && !versionMeetsMinimum(8, 0, 0))) {
                     queryBuf.append(", @@transaction_isolation AS transaction_isolation");
                 } else {
-                    queryBuf.append(", @@tx_isolation AS transaction_isolation");
+                    queryBuf.append(", @@transaction_isolation AS transaction_isolation");
                 }
                 queryBuf.append(", @@wait_timeout AS wait_timeout");
 

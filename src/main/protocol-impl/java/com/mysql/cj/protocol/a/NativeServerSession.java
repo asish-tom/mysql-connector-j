@@ -310,7 +310,7 @@ public class NativeServerSession implements ServerSession {
     }
 
     public boolean isQueryCacheEnabled() {
-        return "ON".equalsIgnoreCase(this.serverVariables.get("query_cache_type")) && !"0".equalsIgnoreCase(this.serverVariables.get("query_cache_size"));
+        return false;
     }
 
     /**

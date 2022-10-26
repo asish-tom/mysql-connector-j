@@ -1479,7 +1479,7 @@ public class ConnectionRegressionTest extends BaseTestCase {
             loggedConn = getConnectionWithProps(props);
             loggedConn.getTransactionIsolation();
 
-            String s = versionMeetsMinimum(8, 0, 3) ? "transaction_isolation" : "tx_isolation";
+            String s = versionMeetsMinimum(8, 0, 3) ? "transaction_isolation" : "transaction_isolation";
             assertEquals(-1, BufferingLogger.getBuffer().toString().indexOf("SHOW VARIABLES LIKE '" + s + "'"));
         } finally {
             BufferingLogger.dropBuffer();
@@ -6563,9 +6563,9 @@ public class ConnectionRegressionTest extends BaseTestCase {
                 serverVariables.put(this.rs.getString(1), val);
             }
 
-            // fix the renaming of "tx_isolation" to "transaction_isolation" that is made in NativeSession.loadServerVariables().
-            if (!serverVariables.containsKey("transaction_isolation") && serverVariables.containsKey("tx_isolation")) {
-                serverVariables.put("transaction_isolation", serverVariables.remove("tx_isolation"));
+            // fix the renaming of "transaction_isolation" to "transaction_isolation" that is made in NativeSession.loadServerVariables().
+            if (!serverVariables.containsKey("transaction_isolation") && serverVariables.containsKey("transaction_isolation")) {
+                serverVariables.put("transaction_isolation", serverVariables.remove("transaction_isolation"));
             }
             Session session = con.getSession();
 
@@ -6591,10 +6591,6 @@ public class ConnectionRegressionTest extends BaseTestCase {
             assertEquals(serverVariables.get("lower_case_table_names"), session.getServerSession().getServerVariable("lower_case_table_names"));
             assertEquals(serverVariables.get("max_allowed_packet"), session.getServerSession().getServerVariable("max_allowed_packet"));
             assertEquals(serverVariables.get("net_write_timeout"), session.getServerSession().getServerVariable("net_write_timeout"));
-            if (!con.getServerVersion().meetsMinimum(new ServerVersion(8, 0, 3))) {
-                assertEquals(serverVariables.get("query_cache_size"), session.getServerSession().getServerVariable("query_cache_size"));
-                assertEquals(serverVariables.get("query_cache_type"), session.getServerSession().getServerVariable("query_cache_type"));
-            }
 
             // not necessarily contains STRICT_TRANS_TABLES
             for (String sm : serverVariables.get("sql_mode").split(",")) {
@@ -9183,32 +9179,32 @@ public class ConnectionRegressionTest extends BaseTestCase {
      * @throws Exception
      */
     @Test
-    public void testBug74711() throws Exception {
-        assumeTrue(((MysqlConnection) this.conn).getSession().getServerSession().isQueryCacheEnabled(),
-                "testBug77411() requires a server supporting a query cache.");
-
-        this.rs = this.stmt.executeQuery("SELECT @@global.query_cache_type, @@global.query_cache_size");
-        this.rs.next();
-        assumeTrue("ON".equalsIgnoreCase(this.rs.getString(1)) && !"0".equals(this.rs.getString(2)),
-                "testBug77411() requires a server started with the options '--query_cache_type=1' and '--query_cache_size=N', (N > 0).");
-
-        boolean useLocTransSt = false;
-        boolean useElideSetAC = false;
-        do {
-            final String testCase = String.format("Case: [LocTransSt: %s, ElideAC: %s ]", useLocTransSt ? "Y" : "N", useElideSetAC ? "Y" : "N");
-            final Properties props = new Properties();
-            props.setProperty(PropertyKey.useLocalTransactionState.getKeyName(), Boolean.toString(useLocTransSt));
-            props.setProperty(PropertyKey.elideSetAutoCommits.getKeyName(), Boolean.toString(useElideSetAC));
-            Connection testConn = getConnectionWithProps(props);
-
-            assertEquals(useLocTransSt,
-                    ((JdbcConnection) testConn).getPropertySet().getBooleanProperty(PropertyKey.useLocalTransactionState).getValue().booleanValue(), testCase);
-            assertEquals(useElideSetAC,
-                    ((JdbcConnection) testConn).getPropertySet().getBooleanProperty(PropertyKey.elideSetAutoCommits).getValue().booleanValue(), testCase);
-
-            testConn.close();
-        } while ((useLocTransSt = !useLocTransSt) || (useElideSetAC = !useElideSetAC));
-    }
+//    public void testBug74711() throws Exception {
+//        assumeTrue(((MysqlConnection) this.conn).getSession().getServerSession().isQueryCacheEnabled(),
+//                "testBug77411() requires a server supporting a query cache.");
+//
+//        this.rs = this.stmt.executeQuery("SELECT @@global.query_cache_type, @@global.query_cache_size");
+//        this.rs.next();
+//        assumeTrue("ON".equalsIgnoreCase(this.rs.getString(1)) && !"0".equals(this.rs.getString(2)),
+//                "testBug77411() requires a server started with the options '--query_cache_type=1' and '--query_cache_size=N', (N > 0).");
+//
+//        boolean useLocTransSt = false;
+//        boolean useElideSetAC = false;
+//        do {
+//            final String testCase = String.format("Case: [LocTransSt: %s, ElideAC: %s ]", useLocTransSt ? "Y" : "N", useElideSetAC ? "Y" : "N");
+//            final Properties props = new Properties();
+//            props.setProperty(PropertyKey.useLocalTransactionState.getKeyName(), Boolean.toString(useLocTransSt));
+//            props.setProperty(PropertyKey.elideSetAutoCommits.getKeyName(), Boolean.toString(useElideSetAC));
+//            Connection testConn = getConnectionWithProps(props);
+//
+//            assertEquals(useLocTransSt,
+//                    ((JdbcConnection) testConn).getPropertySet().getBooleanProperty(PropertyKey.useLocalTransactionState).getValue().booleanValue(), testCase);
+//            assertEquals(useElideSetAC,
+//                    ((JdbcConnection) testConn).getPropertySet().getBooleanProperty(PropertyKey.elideSetAutoCommits).getValue().booleanValue(), testCase);
+//
+//            testConn.close();
+//        } while ((useLocTransSt = !useLocTransSt) || (useElideSetAC = !useElideSetAC));
+//    }
 
     /**
      * Tests fix for Bug#75209 - Set useLocalTransactionState may result in partially committed transaction.

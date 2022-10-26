@@ -65,49 +65,49 @@ public class RetrievalPerfTest extends BaseTestCase {
      * 
      * @throws Exception
      */
-    @Test
-    public void testRetrievalCached() throws Exception {
-        assumeTrue(((MysqlConnection) this.conn).getSession().getServerSession().isQueryCacheEnabled(),
-                "This test requires the server with enabled query cache.");
-
-        this.stmt.executeUpdate("SET QUERY_CACHE_TYPE = DEMAND");
-
-        double fullBegin = System.currentTimeMillis();
-        double averageQueryTimeMs = 0;
-        double averageTraversalTimeMs = 0;
-
-        for (int i = 0; i < NUM_TESTS; i++) {
-            long queryBegin = System.currentTimeMillis();
-            this.rs = this.stmt.executeQuery("SELECT SQL_CACHE * FROM retrievalPerfTestHeap");
-
-            long queryEnd = System.currentTimeMillis();
-            averageQueryTimeMs += ((double) (queryEnd - queryBegin) / NUM_TESTS);
-
-            long traverseBegin = System.currentTimeMillis();
-
-            while (this.rs.next()) {
-                this.rs.getInt(1);
-                this.rs.getString(2);
-            }
-
-            long traverseEnd = System.currentTimeMillis();
-            averageTraversalTimeMs += ((double) (traverseEnd - traverseBegin) / NUM_TESTS);
-        }
-
-        double fullEnd = System.currentTimeMillis();
-        double fullTime = (fullEnd - fullBegin) / 1000;
-        double queriesPerSec = NUM_TESTS / fullTime;
-        double rowsPerSec = (NUM_ROWS * NUM_TESTS) / fullTime;
-        System.out.println("\nQuery Cache From Heap Retrieval\n");
-        System.out.println("Full test took: " + fullTime + " seconds.");
-        System.out.println("Queries/second: " + queriesPerSec);
-        System.out.println("Rows/second: " + rowsPerSec);
-        System.out.println("Avg. Query Exec Time: " + averageQueryTimeMs + " ms");
-        System.out.println("Avg. Traversal Time: " + averageTraversalTimeMs + " ms");
-
-        // We're doing something wrong if we can't beat 45 seconds :(
-        assertTrue(fullTime < 45);
-    }
+//    @Test
+//    public void testRetrievalCached() throws Exception {
+//        assumeTrue(((MysqlConnection) this.conn).getSession().getServerSession().isQueryCacheEnabled(),
+//                "This test requires the server with enabled query cache.");
+//
+//        this.stmt.executeUpdate("SET QUERY_CACHE_TYPE = DEMAND");
+//
+//        double fullBegin = System.currentTimeMillis();
+//        double averageQueryTimeMs = 0;
+//        double averageTraversalTimeMs = 0;
+//
+//        for (int i = 0; i < NUM_TESTS; i++) {
+//            long queryBegin = System.currentTimeMillis();
+//            this.rs = this.stmt.executeQuery("SELECT SQL_CACHE * FROM retrievalPerfTestHeap");
+//
+//            long queryEnd = System.currentTimeMillis();
+//            averageQueryTimeMs += ((double) (queryEnd - queryBegin) / NUM_TESTS);
+//
+//            long traverseBegin = System.currentTimeMillis();
+//
+//            while (this.rs.next()) {
+//                this.rs.getInt(1);
+//                this.rs.getString(2);
+//            }
+//
+//            long traverseEnd = System.currentTimeMillis();
+//            averageTraversalTimeMs += ((double) (traverseEnd - traverseBegin) / NUM_TESTS);
+//        }
+//
+//        double fullEnd = System.currentTimeMillis();
+//        double fullTime = (fullEnd - fullBegin) / 1000;
+//        double queriesPerSec = NUM_TESTS / fullTime;
+//        double rowsPerSec = (NUM_ROWS * NUM_TESTS) / fullTime;
+//        System.out.println("\nQuery Cache From Heap Retrieval\n");
+//        System.out.println("Full test took: " + fullTime + " seconds.");
+//        System.out.println("Queries/second: " + queriesPerSec);
+//        System.out.println("Rows/second: " + rowsPerSec);
+//        System.out.println("Avg. Query Exec Time: " + averageQueryTimeMs + " ms");
+//        System.out.println("Avg. Traversal Time: " + averageTraversalTimeMs + " ms");
+//
+//        // We're doing something wrong if we can't beat 45 seconds :(
+//        assertTrue(fullTime < 45);
+//    }
 
     /**
      * Tests retrieval from HEAP tables

@@ -640,7 +640,7 @@ public class ConnectionTest extends BaseTestCase {
 
     /**
      * Tests whether or not the configuration 'useLocalSessionState' actually prevents non-needed 'set autocommit=', 'set session transaction isolation ...'
-     * and 'show variables like tx_isolation' queries.
+     * and 'show variables like transaction_isolation' queries.
      * 
      * @throws Exception
      */
@@ -666,7 +666,7 @@ public class ConnectionTest extends BaseTestCase {
 
         String logAsString = BufferingLogger.getBuffer().toString();
 
-        String s = versionMeetsMinimum(8, 0, 3) ? "transaction_isolation" : "tx_isolation";
+        String s = versionMeetsMinimum(8, 0, 3) ? "transaction_isolation" : "transaction_isolation";
 
         assertTrue(logAsString.indexOf("SET SESSION") == -1 && logAsString.indexOf("SHOW VARIABLES LIKE '" + s + "'") == -1
                 && logAsString.indexOf("SET autocommit=") == -1);

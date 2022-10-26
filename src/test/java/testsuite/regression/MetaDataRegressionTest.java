@@ -5403,7 +5403,7 @@ public class MetaDataRegressionTest extends BaseTestCase {
      */
     @Test
     public void testBug33723611() throws Exception {
-        this.rs = this.stmt.executeQuery(versionMeetsMinimum(5, 7) ? "SELECT @@SESSION.transaction_isolation" : "SELECT @@SESSION.tx_isolation");
+        this.rs = this.stmt.executeQuery(versionMeetsMinimum(5, 7) ? "SELECT @@SESSION.transaction_isolation" : "SELECT @@SESSION.transaction_isolation");
         assertTrue(this.rs.next());
         assertEquals("REPEATABLE-READ", this.rs.getString(1));
 
